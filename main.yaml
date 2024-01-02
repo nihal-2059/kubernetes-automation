@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    ansible_user: ec2-user
+  #if we want to call main.yml
+  roles:
+  - kubernetes-setup
+
+  ## if you want to call tasks that don't start with main.yml in roles.
+  # tasks:
+  # - name: Run tasks for the role
+  #   include_role:
+  #     name: kubernetes-automation
+  #     tasks_from: master-node-setup #container-runtime-setup #master-node-setup
+
+      

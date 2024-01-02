@@ -1,0 +1,30 @@
+---
+- name: Install the required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - kubeadm
+  - kubelet
+  - kubectl
+  when: inventory_hostname in groups["master_nodes"]
+
+- name: Start kubelet service
+  systemd:
+    name: kubelet
+    state: started
+  when: inventory_hostname in groups["master_nodes"]
+
+- name: Initialize kubeadm
+  shell: kubeadm init
+  when: inventory_hostname in groups["master_nodes"]
+
+- name: Setup kubeconfig file for root user
+  shell: |
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  when: inventory_hostname in groups["master_nodes"]
+
+- name: Install the pod network
+  shell: "kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml"
+  when: inventory_hostname in groups["master_nodes"]

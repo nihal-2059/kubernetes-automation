@@ -1,0 +1,60 @@
+---
+- name: Disable Swap on the machine
+  shell: swapoff -a
+
+#Set selinux to permissive mode
+- name: Set selinux to permissive mode
+  shell: |
+    setenforce 0
+    sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+
+- name: Setup kubernetes repository on all hosts
+  yum_repository:
+    name: kubernetes
+    description: Packages for kubernetes installation
+    baseurl: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+    enabled: true
+    gpgcheck: true
+    gpgkey: https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+
+- name: Setting up kernel modules and ipv4 forwarding files
+  shell: |
+        cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+        overlay
+        br_netfilter
+        EOF
+
+        cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+        net.bridge.bridge-nf-call-iptables  = 1
+        net.bridge.bridge-nf-call-ip6tables = 1
+        net.ipv4.ip_forward                 = 1
+        EOF
+
+        sysctl --system
+
+- name: Load the kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - br_netfilter
+  - overlay
+
+- name: Install containerd packages
+  yum:
+    name: "containerd"
+    state: present
+
+- name: Load the default configuration files for containerd
+  shell: containerd config default > /etc/containerd/config.toml
+
+- name: Update the cgroup driver for containerd
+  lineinfile:
+    path: /etc/containerd/config.toml
+    regexp: '^            SystemdCgroup = false'
+    line: '            SystemdCgroup = true'
+
+- name: Start the containerd service
+  systemd:
+    name: containerd
+    state: started

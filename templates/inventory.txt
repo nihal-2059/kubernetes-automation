@@ -1,0 +1,5 @@
+[master_nodes]
+master_ip_placeholder
+
+[worker_nodes]
+worker_ip_placeholder

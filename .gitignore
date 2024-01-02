@@ -1,0 +1,6 @@
+inventory
+infrastructure-setup/terraform.tfvars
+infrastructure-setup/terraform.tfstate*
+infrastructure-setup/.terraform*
+infrastructure-setup/id_rsa.pub
+infrastructure-setup/ec2-instance.tf
