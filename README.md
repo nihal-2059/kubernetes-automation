@@ -23,20 +23,27 @@ Once the above tools are being installed, we can move onto the actual script.
 Then you will have to click on the User --> Security Credentials --> Create Access Key.</br>
 Store the **Access** and **Secret** keys as you would not be able to get them back.
 
-2. Once you get the credentials, run the bash script named setup.sh </br>
+2. Generate ssh keys as we would need them to interact with the EC2 instances. </br>
+They are usually present in your HOME directory under folder **.ssh** . If you are not able to see them, then please generate them using the ```ssh-keygen command```. Once generated, move the file named ```id_rsa.pub``` to **infrastructure-setup** folder.
+
+3. Once you get the credentials, run the bash script named setup.sh </br>
    ``` bash setup.sh ``` </br>
 That's pretty much you will have to do. There are multiple constraints in the script to handle failures. **Please** provide **valid** values, else script will fail.
 
-3. Next it will prompt you to check if the terraform plan has generated the correct plan. If you know terraform you can review it, else just say **yes** at the prompt and the script will proceed further.
+4. Next it will prompt you to check if the terraform plan has generated the correct plan. If you know terraform you can review it, else just say **yes** at the prompt and the script will proceed further.
 
-4. Once the Infrastructure is setup, it will run the **Ansible role** named **kubernetes-setup** to configure the Kubeadm cluster. You don't have to worry about the **Inventory** file it will be generated dynamically.
+5. Once the Infrastructure is setup, it will run the **Ansible role** named **kubernetes-setup** to configure the Kubeadm cluster. You don't have to worry about the **Inventory** file it will be generated dynamically.
 
-5. If all goes good, Kubeadm cluster would be setup and it would provide you the Master Node IP. Just login, </br>
+6. If all goes good, Kubeadm cluster would be setup and it would provide you the Master Node IP. Just login, </br>
    ``` ssh ec2-user@<masternode-ip> ``` </br>
    Switch to **root** user and run the **kubectl** command and **BOOM** you are good to go!
    
 
 Note : I know we can use provisioners in Terraform, but it's deprecated and not recommended by Terraform. So this script takes care of everything!
+
+## Destroy the resources once done playing with Cluster
+1. Just run the script **destroy.sh** </br>
+``` bash destroy.sh ```
 
 
 
