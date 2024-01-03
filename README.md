@@ -45,6 +45,8 @@ Note : I know we can use provisioners in Terraform, but it's deprecated and not 
 1. Just run the script **destroy.sh** </br>
 ``` bash destroy.sh ```
 
+## Hope you like it and have fun working with cluster and deploying the workloads for testing!
+
 
 
 
