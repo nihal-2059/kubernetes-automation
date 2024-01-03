@@ -57,9 +57,10 @@ initializeTerraform () {
 
             if [[ ${version_upgrade} == 'yes' ]]
             then
-                echo "Upgrade"
+                echo "Upgrading the version!"
+                terraform init -upgrade
             else
-                echo "Rollback the version in providers.tf file"
+                echo "Please revert back to the version you ran this script with! Default ( 5.30.1 )"
             fi
         fi
     fi
