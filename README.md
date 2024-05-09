@@ -56,3 +56,4 @@ Note : I know we can use provisioners in Terraform, but it's deprecated and not 
 
 Using the above format, so that you can push the image to docker hub later.
 
+## Pending further configurations for Linux.
