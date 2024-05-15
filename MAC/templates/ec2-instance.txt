@@ -1,0 +1,34 @@
+data "aws_ami" "ami_image" {
+  most_recent = true
+
+  owners = ["amazon"]
+  filter {
+    name = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name = "name"
+    values = ["al2023-ami-2023.2.20231113.0-kernel-6.1-x86_64"]
+  }
+}
+
+
+resource "aws_instance" "node-pool" {
+  for_each               = var.instance_name
+  ami                    = data.aws_ami.ami_image.id
+  instance_type          = instance_type_placeholder
+  key_name               = aws_key_pair.main-key-pair.key_name
+  vpc_security_group_ids = each.key == "worker" ? [aws_security_group.worker-sg.id] : [aws_security_group.master-sg.id]
+
+  tags = {
+    Name = each.value
+  }
+}
+
+output "instance-public-ip" {
+  value = {
+    //we can't use for_each, so using for and getting the required output
+    for key,value in var.instance_name : value => aws_instance.node-pool[key].public_ip
+  }
+}

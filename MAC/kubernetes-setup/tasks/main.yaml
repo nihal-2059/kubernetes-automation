@@ -1,0 +1,7 @@
+---
+- name: Run cluster setup tasks
+  include_tasks: "{{ item }}"
+  loop:
+  - container-runtime-setup.yml
+  - master-node-setup.yml
+  - worker-node-setup.yml

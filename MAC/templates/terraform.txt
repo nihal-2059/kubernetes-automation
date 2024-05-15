@@ -1,0 +1,18 @@
+region     = region_placeholder
+access_key = access_key_placeholder
+secret_key = secret_key_placeholder
+instance_name = {
+  master = "master_node"
+  worker = "worker_node"
+}
+master-ports = [22, 6443, 6783, 53, 6784]
+worker-ports = [22, 10250, 6783, 6784, 53]
+udp-ports    = [6783, 6784, 53]
+ports-desc = {
+  22    = "SSH port"
+  6443  = "API-server port"
+  6783  = "Weave-net port"
+  53    = "DNS port"
+  6784  = "Weave-net port"
+  10250 = "Kubelet port"
+}
